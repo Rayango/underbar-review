@@ -79,16 +79,28 @@
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) {
+    let results = [];
+    _.each(collection, function(item) {
+      return test(item) === true ? results.push(item) : undefined;
+    });
+    return results;
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    var results = [];
+    _.each(collection, function(item) {
+      return test(item) === false ? results.push(item) : undefined;
+    });
+    return results;
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
+    let results = new Set(array);
+    return Array.from(results);
   };
 
 
@@ -97,6 +109,11 @@
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
+    var results = [];
+    _.each(collection, function(item) {
+      results.push(iterator(item));
+    });
+    return results;
   };
 
   /*
@@ -138,7 +155,13 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    _.each(collection, function(item, x) {
+      accumulator === undefined && x === 0 ? accumulator = item : accumulator = iterator(accumulator, item);
+    });
+    return accumulator;
   };
+
+
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {
