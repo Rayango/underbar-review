@@ -56,9 +56,10 @@
       });
 
       it('should return false given an array and a value not in that array', function() {
+        expect(_.contains([1, 2, 3], 4)).to.be.false;
         // Replace this line with an `expect` statement that tests
         // the behavior described by the `it` string
-        throw new Error('This test is missing.');
+        // throw new Error('This test is missing.');
       });
 
       it('should return true given a object and a value from that object', function() {
@@ -89,9 +90,10 @@
       });
 
       it('fails for a collection of all-falsy values', function() {
+        expect(_.every([false, 0, null], _.identity)).to.be.false;
         // Replace this line with an `expect` statement that tests
         // the behavior described by the `it` string
-        throw new Error('This test is missing.');
+        // throw new Error('This test is missing.');
       });
 
       it('fails for a collection containing mixed falsy and truthy values', function() {
@@ -147,9 +149,10 @@
       });
 
       it('should fail for a set containing no matching values', function() {
+        expect(_.some([1, 3, 5], isEven)).to.be.false;
         // Replace this line with an `expect` statement that tests
         // the behavior described by the `it` string
-        throw new Error('This test is missing.');
+        // throw new Error('This test is missing.');
       });
 
       it('should pass for a collection containing one matching value', function() {
@@ -187,9 +190,13 @@
       });
 
       it('should override properties found on the destination', function() {
+        var destination = { a: 'c'};
+        var source = { a: 'b' };
+        var extended = _.extend(destination, source);
+        expect(extended.a).to.equal('b');
         // Replace this line with an `expect` statement that tests
         // the behavior described by the `it` string
-        throw new Error('This test is missing.');
+        // throw new Error('This test is missing.');
       });
 
       it('should not override properties not found in the source', function() {
@@ -267,7 +274,12 @@
       it('should copy any property whose key is not already set on the target', function() {
         // Replace this line with an `expect` statement that tests
         // the behavior described by the `it` string
-        throw new Error('This test is missing.');
+        var destination = {a: 1};
+        var source = {b: 2};
+
+        _.defaults(destination, source);        
+
+        expect(destination.b).to.equal(2);
       });
 
       it('should not copy a property if that key is already set on the target', function() {

@@ -155,8 +155,8 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-    _.each(collection, function(item, x) {
-      accumulator === undefined && x === 0 ? accumulator = item : accumulator = iterator(accumulator, item);
+    _.each(collection, function(item, index) {
+      accumulator === undefined && index === 0 ? accumulator = item : accumulator = iterator(accumulator, item);
     });
     return accumulator;
   };
@@ -177,14 +177,32 @@
 
 
   // Determine whether all of the elements match a truth test.
-  _.every = function(collection, iterator) {
+  _.every = function(collection, test) {
     // TIP: Try re-using reduce() here.
+    if (!test) {
+      test = _.identity;
+    }
+    return _.reduce(collection, function(allTrue, item) {
+      if (!allTrue) {
+        return false;
+      } 
+      return test(item) ? true : false;
+    }, true);
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
-  _.some = function(collection, iterator) {
+  _.some = function(collection, test) {
     // TIP: There's a very clever way to re-use every() here.
+    if (!test) {
+      test = _.identity;
+    }
+    return _.reduce(collection, function(anyTrue, item) {
+      if (anyTrue) {
+        return true;
+      } 
+      return test(item) ? true : false;
+    }, false);
   };
 
 
@@ -207,11 +225,27 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    for (var i = 1; i < arguments.length; i++) {
+      let object = arguments[i];
+      for (var key in object) {
+        obj[key] = object[key];
+      }
+    }
+    return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
-  _.defaults = function(obj) {
+  _.defaults = function(destination) {
+    for (var i = 1; i < arguments.length; i++) {
+      let source = arguments[i];
+      for (var key in source) {
+        if (Object.keys(destination).indexOf(key) === -1) {
+          destination[key] = source[key];
+        }
+      }
+    }
+    return destination;
   };
 
 
@@ -255,6 +289,18 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var results = {};
+
+    return function() {
+      // if (arguments.length === 1) {
+      //   return result[arguments];
+      // }
+      var arg = JSON.stringify(arguments);
+      if (!results[arg]) {
+        results[arg] = func.apply(this, arguments);
+      }
+      return results[arg];
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
